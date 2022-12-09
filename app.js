@@ -5,6 +5,7 @@ const router = require("./routes");
 
 require("./models");
 
+// error handling by
 process.on("uncaughtException", (e) => {
   console.log(e);
 });

@@ -1,9 +1,9 @@
 {
   "port": 3000,
   "db": {
-    "username": "root",
+    "username": "adp_user",
     "password": null,
-    "name": "node-boiler-plate",
+    "name": "adp_app",
     "host": "127.0.0.1"
   }
 }

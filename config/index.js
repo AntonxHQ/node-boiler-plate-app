@@ -1,5 +1,7 @@
 const convict = require("convict");
 
+convict.addFormat(require("convict-format-with-validator").ipaddress);
+
 // Define a schema
 var config = convict({
   env: {
