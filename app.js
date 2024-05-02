@@ -31,7 +31,23 @@ app.use(
 );
 // app.use(expressLogger.errorLogger());
 app.use(cors());
+app.use(function (req, res, next) {
+  // Success response (default status 200)
+  res.success = async (data, status = 200) => {
+    return res.status(status).send({ success: true, error: null, body: data });
+  };
 
+  // Internal request response
+
+  res.internalServerError = async (error) => {
+    return res.status(error.status || 500).send({
+      success: false,
+      error: error.message || "Internal Server Error",
+      body: null,
+    });
+  };
+  next();
+});
 // routes
 app.use("/api", router);
 
