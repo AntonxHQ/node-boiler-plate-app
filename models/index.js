@@ -30,7 +30,10 @@ sequelize
 fs.readdirSync(__dirname)
   .filter((file) => file !== basename && file.endsWith(".js"))
   .forEach((file) => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    const model = require(path.join(__dirname, file))(
+      sequelize,
+      Sequelize.DataTypes
+    );
     let name = upperFirst(camelCase(model.name));
     db[name] = model;
   });

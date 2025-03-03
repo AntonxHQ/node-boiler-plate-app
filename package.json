@@ -1,6 +1,6 @@
 {
   "name": "node-boiler-plate-app",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Boiler Plate Application of Node",
   "scripts": {
     "start": "nodemon server.js",
@@ -9,7 +9,7 @@
     "stop-server": "./node_modules/pm2/bin/pm2 stop server.js",
     "logs": "./node_modules/pm2/bin/pm2 logs",
     "test": "npm run test",
-    "lint": "npx eslint .",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "prettier": "npx prettier -c .",
     "db:migrate": "npx sequelize db:migrate",
     "db:migrate:create": "npx sequelize migration:generate --name",
@@ -36,6 +36,7 @@
     "convict": "^6.2.3",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.0.2",
+    "eslint-plugin-prettier": "^5.2.3",
     "husky": "^9.1.7",
     "nodemon": "^3.1.9",
     "prettier": "^3.5.3",
