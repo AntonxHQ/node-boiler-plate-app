@@ -28,13 +28,9 @@ sequelize
   });
 
 fs.readdirSync(__dirname)
-  .filter((file) => {
-    return (
-      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js"
-    );
-  })
+  .filter((file) => file !== basename && file.endsWith(".js"))
   .forEach((file) => {
-    const model = sequelize["import"](path.join(__dirname, file));
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     let name = upperFirst(camelCase(model.name));
     db[name] = model;
   });
