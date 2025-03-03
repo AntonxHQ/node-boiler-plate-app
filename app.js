@@ -1,36 +1,51 @@
 const express = require("express");
-const expressLogger = require("express-bunyan-logger");
+const morgan = require("morgan");
 const cors = require("cors");
 const router = require("./routes");
 const responseHandler = require("./middlewares/responseHandler");
 const errorHandler = require("./middlewares/errorHandler");
+const { v4: uuidv4 } = require("uuid");
 
 require("./models");
-// error handling by
+
+// Error handling for uncaught exceptions
 process.on("uncaughtException", (e) => {
-  console.log(e);
+  console.error(e);
 });
 
 const app = express();
 
 app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(cors());
+
+// Custom Morgan Tokens
+morgan.token("id", (req) => req.id || "N/A");
+morgan.token("real-ip", (req) => req.ip || req.connection.remoteAddress);
+morgan.token("body", (req) => JSON.stringify(req.body));
+morgan.token("user-agent", (req) => req.headers["user-agent"]);
+
+// Request ID Middleware
+app.use((req, res, next) => {
+  req.id = uuidv4(); // Unique request ID
+  next();
+});
+
+// Advanced Morgan Logger
 app.use(
-  expressLogger({
-    excludes: [
-      "headers",
-      "req",
-      "user-agent",
-      "short-body",
-      "http-version",
-      "req-headers",
-      "res-headers",
-      "body",
-      "res",
-    ],
+  morgan((tokens, req, res) => {
+    return JSON.stringify({
+      request_id: tokens.id(req, res),
+      method: tokens.method(req, res),
+      url: tokens.url(req, res),
+      status: Number(tokens.status(req, res)),
+      response_time: `${tokens["response-time"](req, res)} ms`,
+      ip: tokens["real-ip"](req, res),
+      user_agent: tokens["user-agent"](req, res),
+      timestamp: new Date().toISOString(),
+    });
   })
 );
-app.use(cors());
 
 // Middleware for response handling
 app.use(responseHandler);
